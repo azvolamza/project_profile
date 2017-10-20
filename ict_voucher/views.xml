@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+
+    <data>
+
+        <menuitem name="Kế hoạch thu chi" id="ict_kehoachthuchi_master" groups="account.group_account_user"/>
+
+        <record model="ir.ui.view" id="view_voucher_kanban">
+            <field name="name">voucher.view.kanban</field>
+            <field name="model">voucher.kanban</field>
+            <field name="priority">10</field>
+            <field name="arch" type="xml">
+                <kanban class="oe_background_grey o_kanban_dashboard o_account_kanban" create="false">
+                    <field name="name"/>
+                    <field name="doc_count"/>
+                    <templates>
+
+                        <t t-name="JournalTop">
+                        <div class="o_kanban_card_header">
+                            <div class="o_kanban_card_header_title">
+                                <div class="o_primary">
+                                    <a type="object" name="open_action"><field name="name"/></a>
+                                </div>
+                                <div class="o_secondary" t-att-title="dashboard.title">
+                                    <field name="name"/>
+                                </div>
+                            </div>
+                        </div>
+
+                    </t>
+
+
+                        <t t-name="kanban-box">
+                            <div t-attf-class="#{kanban_color(0)}" t-if="record.name.raw_value" class="o_project_kanban_box">
+                                <div>
+                                    <b style="color: #21b799;">Tổng hợp thu chi theo năm :</b>
+                                <a name="attachment_tree_view" type="object">
+                                    <span class="o_value">
+                                        <t t-esc="record.name.value"/>
+                                    </span>
+                                    <span class="o_label"></span>
+                                </a>
+                                    <br/>
+                                <t t-if="record.doc_count.raw_value" class="o_project_kanban_box">
+                                    <a name="attachment_tree_view" type="object">
+                                        <span class="o_label">Tổng tiền :</span>
+                                        <span class="o_value">
+                                            <t t-esc="record.doc_count.value"/>
+                                        </span>
+                                    </a>
+                                </t>
+                                </div>
+                            </div>
+                        </t>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="#{kanban_color(0)}" t-if="record.name.raw_value" class="o_project_kanban_box">
+                                <div>
+                                    <b style="color: #21b799;">Tổng hợp thu chi theo năm :</b>
+                                <a name="attachment_tree_view" type="object">
+                                    <span class="o_value">
+                                        <t t-esc="record.name.value"/>
+                                    </span>
+                                    <span class="o_label"></span>
+                                </a>
+                                    <br/>
+                                <t t-if="record.doc_count.raw_value" class="o_project_kanban_box">
+                                    <a name="attachment_tree_view" type="object">
+                                        <span class="o_label">Tổng tiền :</span>
+                                        <span class="o_value">
+                                            <t t-esc="record.doc_count.value"/>
+                                        </span>
+                                    </a>
+                                </t>
+                                </div>
+                            </div>
+                        </t>
+
+
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="ict_voucher_kanban_view_act" model="ir.actions.act_window">
+            <field name="name">Kanbanview</field>
+            <field name="res_model">voucher.kanban</field>
+            <field name="view_id" ref="view_voucher_kanban"/>
+            <field name="view_mode">kanban</field>
+            <field name="view_type">form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+
+                </p>
+            </field>
+        </record>
+
+
+
+        <record model="ir.ui.view" id="ict_voucher_view_form">
+            <field name="name">ict.voucher.view.form</field>
+            <field name="model">ict.voucher</field>
+            <field name="arch" type="xml">
+                <form string="Thu chi">
+                    <header>
+                    <button name="confirm" groups="account.group_account_manager" string="Xác nhận" type="object" class="oe_highlight" attrs="{'invisible':[('state','=', 'confirm')]}"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirm"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <field name="name" required="1"/>
+                        </group>
+                        <group>
+                            <group>
+
+                                <field name="partner_id" required="1" attrs="{'readonly':[('state','=', 'confirm')]}"/>
+                                <field name="type" required="1" attrs="{'readonly':[('state','=', 'confirm')]}"/>
+                                <field name="amount_in" required="1" attrs="{'invisible':[('type','=', 'chi')],'readonly':[('state','=', 'confirm')]}"/>
+                                <field name="amount_out" required="1" attrs="{'invisible':[('type','=', 'thu')],'readonly':[('state','=', 'confirm')]}"/>
+                                <field name="amount" invisible="1"/>
+                                <field name="currency_id" attrs="{'readonly':[('state','=', 'confirm')]}"/>
+                            </group>
+                            <group>
+                                <field name="week" attrs="{'readonly':[('state','=', 'confirm')]}"/>
+                                <field name="date_submit" required="1" attrs="{'readonly':[('state','=', 'confirm')]}"/>
+                                <field name="date_confirm" attrs="{'invisible':[('type','=', 'thu')],'readonly':[('state','=', 'confirm')]}"/>
+                                <field name="kanban_id" invisible="1"/>
+                            </group>
+                        </group>
+                        <br/>
+                        <field name="notes" placeholder="Ghi chú ..."/>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_ict_voucher_calendar" model="ir.ui.view">
+            <field name="name">view.ict.voucher.calendar</field>
+            <field name="model">ict.voucher</field>
+            <field eval="2" name="priority"/>
+            <field name="arch" type="xml">
+                <calendar color="name" date_start="date_submit" string="Tasks" mode="month">
+                    <field name="name"/>
+                    <field name="partner_id"/>
+                    <field name="amount"/>
+                </calendar>
+            </field>
+        </record>
+
+        <record id="ict_voucher_view_tree" model="ir.ui.view">
+            <field name="name">ict.voucher.view.tree</field>
+            <field name="model">ict.voucher</field>
+            <field name="priority" eval="1"/>
+            <field name="arch" type="xml">
+                <tree string="Thu chi">
+                    <field name="name"/>
+                    <field name="partner_id"/>
+                    <field name="week"/>
+                    <field name="date_submit"/>
+                    <field name="amount_in"/>
+                    <field name="amount_out"/>
+                    <field name="amount"/>
+                    <field name="type"/>
+                    <field name="date_confirm"/>
+                    <field name="state"/>
+                    <field name="currency_id"/>
+                    <field name="notes"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Gantt view -->
+        <record id="ict_voucher_view_gantt" model="ir.ui.view">
+            <field name="name">ict.voucher.gantt</field>
+            <field name="model">ict.voucher</field>
+            <field name="arch" type="xml">
+                <gantt type="consolidate"
+                       date_start="date_submit"
+                       date_stop="date_confirm"
+                       fold_last_level="true"
+                       round_dnd_dates="true"
+                       consolidation="amount"
+                       consolidation_max='{"partner_id": 100}'
+                       consolidation_exclude="state"
+                >
+                </gantt>
+            </field>
+        </record>
+
+        <record id="report_ict_voucher_pivot" model="ir.ui.view">
+            <field name="name">report.ict.voucher.pivot</field>
+            <field name="model">report.ict.voucher</field>
+            <field name="arch" type="xml">
+                <pivot string="Report Pivot">
+                    <!--<field name="partner_id" type="row"/>-->
+                    <!--<field name="date_submit" type="col"/>-->
+                    <field name="amount_in" type="measure"/>
+                    <field name="amount_out" type="measure"/>
+                    <field name="amount" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
+        <record id="voucher_search_form_view" model="ir.ui.view">
+        <field name="name">ict.voucher.search.form</field>
+        <field name="model">ict.voucher</field>
+        <field name="type">search</field>
+        <field name="arch" type="xml">
+            <search string="Product">
+                <filter string="Xác nhận" name="filter_to_confirm" icon="terp-accessories-archiver-minus" domain="[('state','=','confirm')]"/>
+            </search>
+        </field>
+        </record>
+
+
+        <record id="ict_voucher_view_act" model="ir.actions.act_window">
+            <field name="name">Tổng hợp thu chi</field>
+            <field name="res_model">ict.voucher</field>
+            <field name="view_id" ref="ict_voucher_view_tree"/>
+            <field name="view_mode">tree,form,calendar,gantt,pivot</field>
+            <field name="view_type">form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Tạo mới phiếu thu chi theo các tháng
+                </p>
+            </field>
+        </record>
+
+        <record id="ict_voucher_view_act_pivot" model="ir.actions.act_window">
+            <field name="name">Tổng hợp thu chi</field>
+            <field name="res_model">ict.voucher</field>
+            <field name="view_id" ref="report_ict_voucher_pivot"/>
+            <field name="context">{"search_default_filter_to_confirm":1}</field>
+            <field name="view_mode">pivot,tree,form,calendar,gantt</field>
+            <field name="view_type">form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Tạo mới phiếu thu chi theo các tháng
+                </p>
+            </field>
+        </record>
+
+
+        <menuitem name="Báo cáo thu chi" parent="ict_kehoachthuchi_master" id="ict_kehoachthuchi_pivot" action="ict_voucher_view_act_pivot" sequence="2" groups="account.group_account_user"/>
+        <menuitem name="Kế hoạch thu chi" parent="ict_kehoachthuchi_master" id="ict_kehoachthuchi" action="ict_voucher_view_act" sequence="1" groups="account.group_account_user"/>
+
+
+        <!--Cau hinh so du dau ky-->
+
+        <record id="view_ict_voucher_config_settings" model="ir.ui.view">
+            <field name="name">Cấu hình số dư đầu kỳ</field>
+            <field name="model">ict.voucher.config</field>
+            <field name="arch" type="xml">
+                <form string="Cấu hình số dư đầu kỳ" class="oe_form_configuration">
+                    <header>
+                        <button string="Apply" type="object" name="execute" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" type="object" name="cancel" class="oe_link"/>
+                    </header>
+                    <group string="Balance">
+                        <field name="x_balance"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_view_ict_voucher_config_settings" model="ir.actions.act_window">
+            <field name="name">Configure</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ict.voucher.config</field>
+            <field name="view_mode">form</field>
+            <field name="target">inline</field>
+        </record>
+
+        <menuitem id="menu_configs_ict_child" name="Cấu hình" parent="ict_kehoachthuchi_master"
+            sequence="3" action="action_view_ict_voucher_config_settings"/>
+
+    </data>
+
+</openerp>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+
+    <!--Create department-->
+    <record id='ict_department_view_form' model='ir.ui.view'>
+        <field name="name">ict.department.tree.form</field>
+        <field name="model">ict.department</field>
+        <field name="arch" type="xml">
+            <form string="Phòng ban">
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
+                                <field name="active" widget="boolean_button" options="{&quot;terminology&quot;: &quot;archive&quot;}"/>
+                            </button>
+                        </div>
+                        <group col="4">
+                            <field name="name" string="Phòng phòng/ban"/>
+                            <field name="manager_id" string="Quản trị dự án"/>
+                            <field name="parent_id" string="Phòng/Ban cấp trên"/>
+                            <field name="apartment_id" string="Căn hộ/Chung cư"/>
+                        </group>
+                    </sheet>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+        </field>
+    </record>
+
+    <record id='ict_department_view_tree' model='ir.ui.view'>
+            <field name="name">ict.department.tree.view</field>
+            <field name="model">ict.department</field>
+            <field name="arch" type="xml">
+                <tree string="Phòng ban">
+                    <field name="display_name" string="Tên hiển thị"/>
+                    <field name="apartment_id" string="Căn hộ/Chung cư"/>
+                    <field name="manager_id" string="Quản trị dự án"/>
+                    <field name="parent_id" string="Phòng/Ban cấp trên"/>
+                </tree>
+            </field>
+        </record>
+
+    <record id='ict_deparment_model_act' model='ir.actions.act_window'>
+            <field name="name">Phòng/Ban</field>
+            <field name="res_model">ict.department</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a new department
+              </p>
+            </field>
+        </record>
+
+    <menuitem id="ict_menu_departmet" name='Phòng/Ban' parent="menu_ict_master_device" sequence="10" action="ict_deparment_model_act"/>
+
+</odoo>

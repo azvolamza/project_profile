@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!--Create Model-->
+    <record id='ict_model_crm_view_form' model='ir.ui.view'>
+        <field name="name">ict.model.crm.form</field>
+        <field name="model">ict.crm</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="confirm" groups="account.group_account_manager" string="Xác nhận" type="object" class="oe_highlight" attrs="{'invisible':[('state','=', 'confirm')]}"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirm"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+
+                        </div>
+                        <group col="4">
+                            <field name="apartment_id" required="1" attrs="{'readonly':[('state','=', 'confirm')]}"/>
+                            <field name="model_id" required="1" attrs="{'readonly':[('state','=', 'confirm')]}"/>
+                            <field name="ict_department_id" attrs="{'readonly':[('state','=', 'confirm')]}"/>
+                            <field name="port" required="1" attrs="{'readonly':[('state','=', 'confirm')]}"/>
+                            <field name="pon_id_port" attrs="{'readonly':[('state','=', 'confirm')]}"/>
+                            <field name="cpe_type" attrs="{'readonly':[('state','=', 'confirm')]}"/>
+                            <field name="cpe_sn_xx" attrs="{'readonly':[('state','=', 'confirm')]}"/>
+                        </group>
+                    </sheet>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                </form>
+        </field>
+    </record>
+
+    <record id='ict_model_crm_view_tree' model='ir.ui.view'>
+            <field name="name">ict.model.crm.tree.view</field>
+            <field name="model">ict.crm</field>
+            <field name="arch" type="xml">
+                <tree string="Bảo trì"  colors="red:state=='draft';">
+                    <field name="apartment_id"/>
+                    <field name="model_id"/>
+                    <field name="ict_department_id"/>
+                    <field name="port"/>
+                    <field name="pon_id_port"/>
+                    <field name="cpe_type"/>
+                    <field name="cpe_sn_xx"/>
+                    <field name="state" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+    <record id='ict_crm_model_act' model='ir.actions.act_window'>
+            <field name="name">Bảo trì</field>
+            <field name="res_model">ict.crm</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a new department
+              </p>
+            </field>
+        </record>
+
+    <menuitem id="ict_menu_model_crm" name='Bảo trì' parent="menu_ict_master_device" sequence="1" action="ict_crm_model_act"/>
+
+</odoo>

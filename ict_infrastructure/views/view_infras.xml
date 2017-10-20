@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <menuitem name="Hạ tầng" id="menu_ict_master_device" sequence="9"/>
+
+    <record id='ict_device_model_view_tree_views' model='ir.ui.view'>
+            <field name="name">device.model.tree.view</field>
+            <field name="model">ict.device.model</field>
+            <field name="arch" type="xml">
+                <tree string="Model">
+                    <field name="name" string="Hãng thiết bị"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id='ict_device_model_view_form' model='ir.ui.view'>
+            <field name="name">device.model_tree.form</field>
+            <field name="model">ict.device.model</field>
+            <field name="arch" type="xml">
+                <form string="Hãng thiết bị">
+                    <sheet>
+                    <group>
+                        <div>
+                            <field name="image_medium" widget="image" class="oe_avatar"/>
+                            <label for="name" string='Hãng thiết bị' class="oe_edit_only"/>
+                            <h1>
+                                <field name="name" string="Hãng"/>
+                            </h1>
+                        </div>
+                    </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id='ict_device_model_view_kanban' model='ir.ui.view'>
+            <field name="name">ict_device_model_view_form.brandkanban</field>
+            <field name="model">ict.device.model</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <field name="name" />
+                    <field name="image" />
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_vignette oe_semantic_html_override">
+                                <a type="open" href="#" class="oe_kanban_action">
+                                    <img t-att-src="kanban_image('ict.device.model', 'image_small', record.id.value)" class="img-responsive" style="width:100px;"/>
+                                </a>
+                                <div class="text-center">
+                                    <h4 class="oe_partner_heading">
+                                        <a type="open">
+                                            <field name="name"/>
+                                        </a>
+                                    </h4>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id='ict_device_model_act' model='ir.actions.act_window'>
+            <field name="name">Hãng</field>
+            <field name="res_model">ict.device.model</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a new make.
+              </p>
+            </field>
+        </record>
+
+    <!--Chung loai-->
+
+    <record id='ict_infrastructure_model_view_form' model='ir.ui.view'>
+            <field name="name">ict.infrastructure.model.form</field>
+            <field name="model">ict.infrastructure.model</field>
+            <field name="arch" type="xml">
+                <form string="Model">
+                    <sheet>
+                    <field name="image_medium" widget='image' class="oe_avatar"/>
+                    <div class="oe_title">
+                        <label for="modelname" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name" placeholder="Nhập chủng loại..."/>
+                        </h1>
+                        <h2>
+                            <group>
+                                <field name="brand_id" placeholder="Chọn hãng thiết bị..." string="Hãng sản xuất"/>
+                                <field name="port" placeholder="Số port của thiết bị..." required="1"/>
+                            </group>
+                        </h2>
+                    </div>
+                        <br/>
+                        <br/>
+                        <br/>
+                        <br/>
+                        <br/>
+                    <notebook>
+                        <page string="Nhà cung cấp">
+                            <field name="vendors" widget="many2many_kanban">
+                                <kanban quick_create="false" create="true">
+                                    <field name="name"/>
+                                    <templates>
+                                        <t t-name="kanban-box">
+                                            <div style="position: relative">
+                                                <a t-if="! read_only_mode" type="delete" style="position: absolute; right: 0; padding: 4px; diplay: inline-block">X</a>
+                                                <div class="oe_module_vignette">
+                                                    <div class="oe_module_desc">
+                                                        <field name="name"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </t>
+                                    </templates>
+                                </kanban>
+                            </field>
+                        </page>
+                    </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id='ict_infrastructure_model_view_tree' model='ir.ui.view'>
+            <field name="name">ict.infrastructure.model.tree</field>
+            <field name="model">ict.infrastructure.model</field>
+            <field name="arch" type="xml">
+                <tree string="Models">
+                    <field name="brand_id" string="Hãng"/>
+                    <field name="name" string="Loại"/>
+                    <field name="port" string="Port"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id='ict_infrastructure_model_search_view' model='ir.ui.view'>
+            <field name="name">ict.infrastructure.model.search</field>
+            <field name="model">ict.infrastructure.model</field>
+            <field name="arch" type="xml">
+                <search string="Hãng" >
+                    <field name="brand_id" />
+                    <group expand="1" string="Group By">
+                        <filter name="groupby_brand" context="{'group_by' : 'brand_id'}" string="Hãng"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id='ict_infrastructure_model_act' model='ir.actions.act_window'>
+            <field name="name">Chủng loại</field>
+            <field name="res_model">ict.infrastructure.model</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{"search_default_groupby_brand" : True,}</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a new model.
+              </p><p>
+
+              </p>
+            </field>
+        </record>
+
+    <menuitem id="ict_menu_infrastructure_model" parent="menu_ict_master_device" name="Chủng loại" action="ict_infrastructure_model_act" sequence="3"/>
+    <menuitem id="ict_menu_device_model" parent="menu_ict_master_device" name="Hãng" action="ict_device_model_act" sequence="4"/>
+
+</odoo>
